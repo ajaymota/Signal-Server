@@ -34,6 +34,7 @@ public class PostPolicyGenerator {
                                         "    {\"bucket\": \"%s\"},\n" +
                                         "    {\"key\": \"%s\"},\n" +
                                         "    {\"acl\": \"private\"},\n" +
+                                        "    {\"success_action_status\": \"200\"},\n" +
                                         "    [\"starts-with\", \"$Content-Type\", \"\"],\n" +
                                         "    [\"content-length-range\", 1, " + maxSizeInBytes + "],\n" +
                                         "\n" +

@@ -88,7 +88,7 @@ public class AttachmentControllerTest {
               .addProvider(new PolymorphicAuthValueFactoryProvider.Binder<>(ImmutableSet.of(Account.class, DisabledPermittedAccount.class)))
               .setMapper(SystemMapper.getMapper())
               .setTestContainerFactory(new GrizzlyWebTestContainerFactory())
-              .addResource(new AttachmentControllerV1(rateLimiters, "accessKey", "accessSecret", "attachment-bucket"))
+              .addResource(new AttachmentControllerV1(rateLimiters, "http://privately.org:9000", "accessKey", "accessSecret", "attachment-bucket"))
               .addResource(new AttachmentControllerV2(rateLimiters, "accessKey", "accessSecret", "us-east-1", "attachmentv2-bucket"))
               .addResource(new AttachmentControllerV3(rateLimiters, "some-cdn.signal.org", "signal@example.com", 1000, "/attach-here", RSA_PRIVATE_KEY_PEM))
               .build();
@@ -183,7 +183,7 @@ public class AttachmentControllerTest {
                                                  .header("Authorization", AuthHelper.getAuthHeader(AuthHelper.VALID_NUMBER, AuthHelper.VALID_PASSWORD))
                                                  .get(AttachmentDescriptorV2.class);
 
-    assertThat(descriptor.getKey()).isEqualTo(descriptor.getAttachmentIdString());
+    assertThat(descriptor.getKey()).isEqualTo("attachments/" + descriptor.getAttachmentIdString());
     assertThat(descriptor.getAcl()).isEqualTo("private");
     assertThat(descriptor.getAlgorithm()).isEqualTo("AWS4-HMAC-SHA256");
     assertThat(descriptor.getAttachmentId()).isGreaterThan(0);

@@ -20,6 +20,10 @@ public class CdnConfiguration {
   @JsonProperty
   private String region;
 
+  @NotEmpty
+  @JsonProperty
+  private String endpoint;
+
   public String getAccessKey() {
     return accessKey;
   }
@@ -34,6 +38,10 @@ public class CdnConfiguration {
 
   public String getRegion() {
     return region;
+  }
+
+  public String getEndpoint() {
+    return endpoint;
   }
 
 }

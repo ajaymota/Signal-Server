@@ -37,6 +37,10 @@ import java.util.stream.Stream;
 
 import io.dropwizard.auth.Auth;
 
+import org.xmlpull.v1.XmlPullParserException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import io.minio.errors.MinioException;
 
 @Path("/v1/attachments")
 public class AttachmentControllerV1 extends AttachmentControllerBase {
@@ -49,25 +53,25 @@ public class AttachmentControllerV1 extends AttachmentControllerBase {
   private final RateLimiters rateLimiters;
   private final UrlSigner    urlSigner;
 
-  public AttachmentControllerV1(RateLimiters rateLimiters, String accessKey, String accessSecret, String bucket) {
+  public AttachmentControllerV1(RateLimiters rateLimiters, String endpoint, String accessKey, String accessSecret, String bucket) {
     this.rateLimiters = rateLimiters;
-    this.urlSigner    = new UrlSigner(accessKey, accessSecret, bucket);
+    this.urlSigner    = new UrlSigner(endpoint, accessKey, accessSecret, bucket);
   }
 
   @Timed
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public AttachmentDescriptorV1 allocateAttachment(@Auth Account account)
-      throws RateLimitExceededException
+          throws RateLimitExceededException, InvalidKeyException, NoSuchAlgorithmException, IOException, XmlPullParserException, MinioException
   {
     if (account.isRateLimited()) {
       rateLimiters.getAttachmentLimiter().validate(account.getNumber());
     }
 
     long attachmentId = generateAttachmentId();
-    URL  url          = urlSigner.getPreSignedUrl(attachmentId, HttpMethod.PUT, Stream.of(UNACCELERATED_REGIONS).anyMatch(region -> account.getNumber().startsWith(region)));
+    String  url          = urlSigner.getPreSignedUrl(attachmentId, HttpMethod.PUT);
 
-    return new AttachmentDescriptorV1(attachmentId, url.toExternalForm());
+    return new AttachmentDescriptorV1(attachmentId, url);
 
   }
 
@@ -77,9 +81,9 @@ public class AttachmentControllerV1 extends AttachmentControllerBase {
   @Path("/{attachmentId}")
   public AttachmentUri redirectToAttachment(@Auth                      Account account,
                                             @PathParam("attachmentId") long    attachmentId)
-      throws IOException
+          throws IOException, InvalidKeyException, NoSuchAlgorithmException, XmlPullParserException, MinioException
   {
-    return new AttachmentUri(urlSigner.getPreSignedUrl(attachmentId, HttpMethod.GET, Stream.of(UNACCELERATED_REGIONS).anyMatch(region -> account.getNumber().startsWith(region))));
+    return new AttachmentUri(new URL(urlSigner.getPreSignedUrl(attachmentId, HttpMethod.GET)));
   }
 
 }
