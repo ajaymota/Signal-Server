@@ -44,6 +44,11 @@ import java.util.UUID;
 
 import io.dropwizard.auth.Auth;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+
+
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 @Path("/v1/profile")
 public class ProfileController {
@@ -58,6 +63,7 @@ public class ProfileController {
   private final AmazonS3            s3client;
   private final String              bucket;
 
+
   public ProfileController(RateLimiters rateLimiters,
                            AccountsManager accountsManager,
                            UsernamesManager usernamesManager,
@@ -70,17 +76,24 @@ public class ProfileController {
     this.accountsManager    = accountsManager;
     this.usernamesManager   = usernamesManager;
     this.bucket             = profilesConfiguration.getBucket();
-    this.s3client           = AmazonS3Client.builder()
-                                            .withCredentials(credentialsProvider)
-                                            .withRegion(profilesConfiguration.getRegion())
-                                            .build();
+
+    ClientConfiguration clientConfiguration = new ClientConfiguration();
+    clientConfiguration.setSignerOverride("AWSS3V4SignerType");
+
+    this.s3client           = AmazonS3ClientBuilder
+            .standard()
+            .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://privately.org:9000", "us-east-1"))
+            .withPathStyleAccessEnabled(true)
+            .withClientConfiguration(clientConfiguration)
+            .withCredentials(new AWSStaticCredentialsProvider(credentials))
+            .build();
 
     this.policyGenerator  = new PostPolicyGenerator(profilesConfiguration.getRegion(),
-                                                    profilesConfiguration.getBucket(),
-                                                    profilesConfiguration.getAccessKey());
+            profilesConfiguration.getBucket(),
+            profilesConfiguration.getAccessKey());
 
     this.policySigner     = new PolicySigner(profilesConfiguration.getAccessSecret(),
-                                             profilesConfiguration.getRegion());
+            profilesConfiguration.getRegion());
   }
 
   @Timed
