@@ -57,7 +57,7 @@ public class UrlSigner {
           IOException, InvalidKeyException, XmlPullParserException, MinioException {
 
     String url = null;
-    
+
     MinioClient minioClient = new MinioClient("http://privately.org:9000", "A3P4AQ3QQF8M326QP7SU", "zuf+bmZw76Ykit8RlYfaBi1JSsf3eenTLwtKIGtu");
 
     try {

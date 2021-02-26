@@ -139,6 +139,10 @@ public class TwilioSmsSender {
     Map<String, String> requestParameters = new HashMap<>();
     requestParameters.put("Url", url);
     requestParameters.put("To", destination);
+
+    // Print the verification code to Console, input it on login/registration
+    logger.info("Your OTP is :" + verificationCode);
+
     requestParameters.put("From", getRandom(random, numbers));
 
     HttpRequest request = HttpRequest.newBuilder()
