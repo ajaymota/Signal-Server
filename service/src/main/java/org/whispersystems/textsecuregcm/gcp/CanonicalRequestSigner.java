@@ -14,7 +14,6 @@ import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
-
 import java.security.KeyPair;
 
 public class CanonicalRequestSigner {
