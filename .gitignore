@@ -13,5 +13,6 @@ service/config/production.yml
 service/config/federated.yml
 service/config/staging.yml
 service/config/testing.yml
+service/config/config.yml
 .opsmanage
 put.sh
