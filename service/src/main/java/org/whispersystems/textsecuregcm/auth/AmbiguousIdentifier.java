@@ -1,14 +1,22 @@
 package org.whispersystems.textsecuregcm.auth;
 
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AmbiguousIdentifier {
 
   private final UUID   uuid;
   private final String number;
 
+  private static final Logger         logger         = LoggerFactory.getLogger(AmbiguousIdentifier.class);
+
   public AmbiguousIdentifier(String target) {
-    if (target.startsWith("+")) {
+
+    // Print the target to Console, input it on login/registration
+    logger.info("Your TARGET is :" + target);
+
+    if (!target.contains("-")) {
       this.uuid   = null;
       this.number = target;
     } else {

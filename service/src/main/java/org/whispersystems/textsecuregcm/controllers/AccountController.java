@@ -158,7 +158,7 @@ public class AccountController {
     }
 
     if (!Util.isValidNumber(number)) {
-      return Response.status(400).build();
+      // return Response.status(400).build();
     }
 
     String                 pushChallenge          = generatePushChallenge();
@@ -192,8 +192,8 @@ public class AccountController {
       throws RateLimitExceededException
   {
     if (!Util.isValidNumber(number)) {
-      logger.info("Invalid number: " + number);
-      throw new WebApplicationException(Response.status(400).build());
+      //logger.info("Invalid number: " + number);
+      //throw new WebApplicationException(Response.status(400).build());
     }
 
     String requester = Arrays.stream(forwardedFor.split(","))
