@@ -49,24 +49,24 @@ public class Util {
     return Base64.encodeBytesWithoutPadding(getContactToken(number));
   }
 
-  public static boolean isValidNumber(String number) {
-    return number.matches("^\\+[0-9]+") && PhoneNumberUtil.getInstance().isPossibleNumber(number, null);
-  }
-
-  public static String getCountryCode(String number) {
-    Matcher matcher = COUNTRY_CODE_PATTERN.matcher(number);
-
-    if (matcher.find()) return matcher.group(1);
-    else                return "0";
-  }
-
-  public static String getNumberPrefix(String number) {
-    String countryCode  = getCountryCode(number);
-    int    remaining    = number.length() - (1 + countryCode.length());
-    int    prefixLength = Math.min(4, remaining);
-
-    return number.substring(0, 1 + countryCode.length() + prefixLength);
-  }
+//  public static boolean isValidNumber(String number) {
+//    return number.matches("^\\+[0-9]+") && PhoneNumberUtil.getInstance().isPossibleNumber(number, null);
+//  }
+//
+//  public static String getCountryCode(String number) {
+//    Matcher matcher = COUNTRY_CODE_PATTERN.matcher(number);
+//
+//    if (matcher.find()) return matcher.group(1);
+//    else                return "0";
+//  }
+//
+//  public static String getNumberPrefix(String number) {
+//    String countryCode  = getCountryCode(number);
+//    int    remaining    = number.length() - (1 + countryCode.length());
+//    int    prefixLength = Math.min(4, remaining);
+//
+//    return number.substring(0, 1 + countryCode.length() + prefixLength);
+//  }
 
   public static String encodeFormParams(Map<String, String> params) {
     try {

@@ -128,15 +128,15 @@ public class ActiveUserCounter extends AccountDatabaseCrawlerListener {
         }
 
         if (platform != null) {
-          String country = Util.getCountryCode(account.getNumber());
+//          String country = Util.getCountryCode(account.getNumber());
 
           long[] platformIncrement = getTallyFromMap(platformIncrements, platform);
-          long[] countryIncrement  = getTallyFromMap(countryIncrements, country);
+//          long[] countryIncrement  = getTallyFromMap(countryIncrements, country);
 
           for (int i = 0; i < agoMs.length; i++) {
             if (lastActiveMs > agoMs[i]) {
               platformIncrement[i]++;
-              countryIncrement[i]++;
+//              countryIncrement[i]++;
             }
           }
         }

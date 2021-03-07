@@ -157,9 +157,9 @@ public class AccountController {
       return Response.status(400).build();
     }
 
-    if (!Util.isValidNumber(number)) {
-      // return Response.status(400).build();
-    }
+//    if (!Util.isValidNumber(number)) {
+//      // return Response.status(400).build();
+//    }
 
     String                 pushChallenge          = generatePushChallenge();
     StoredVerificationCode storedVerificationCode = new StoredVerificationCode(null,
@@ -191,10 +191,10 @@ public class AccountController {
                                 @QueryParam("challenge")        Optional<String> pushChallenge)
       throws RateLimitExceededException
   {
-    if (!Util.isValidNumber(number)) {
-      //logger.info("Invalid number: " + number);
-      //throw new WebApplicationException(Response.status(400).build());
-    }
+//    if (!Util.isValidNumber(number)) {
+//      //logger.info("Invalid number: " + number);
+//      //throw new WebApplicationException(Response.status(400).build());
+//    }
 
     String requester = Arrays.stream(forwardedFor.split(","))
                              .map(String::trim)
@@ -240,7 +240,7 @@ public class AccountController {
       smsSender.deliverVoxVerification(number, verificationCode.getVerificationCode(), locale);
     }
 
-    metricRegistry.meter(name(AccountController.class, "create", Util.getCountryCode(number))).mark();
+//    metricRegistry.meter(name(AccountController.class, "create", Util.getCountryCode(number))).mark();
 
     return Response.ok().build();
   }
@@ -297,7 +297,7 @@ public class AccountController {
 
       Account account = createAccount(number, password, userAgent, accountAttributes);
 
-      metricRegistry.meter(name(AccountController.class, "verify", Util.getCountryCode(number))).mark();
+//      metricRegistry.meter(name(AccountController.class, "verify", Util.getCountryCode(number))).mark();
 
       return new AccountCreationResult(account.getUuid(), existingAccount.map(Account::isStorageSupported).orElse(false));
     } catch (InvalidAuthorizationHeaderException e) {
@@ -567,13 +567,13 @@ public class AccountController {
       return new CaptchaRequirement(true, true);
     }
 
-    try {
-      rateLimiters.getSmsVoicePrefixLimiter().validate(Util.getNumberPrefix(number));
-    } catch (RateLimitExceededException e) {
-      logger.info("Prefix rate limit exceeded: " + transport + ", " + number + ", (" + forwardedFor + ")");
-      rateLimitedPrefixMeter.mark();
-      return new CaptchaRequirement(true, true);
-    }
+//    try {
+//      rateLimiters.getSmsVoicePrefixLimiter().validate(Util.getNumberPrefix(number));
+//    } catch (RateLimitExceededException e) {
+//      logger.info("Prefix rate limit exceeded: " + transport + ", " + number + ", (" + forwardedFor + ")");
+//      rateLimitedPrefixMeter.mark();
+//      return new CaptchaRequirement(true, true);
+//    }
 
     return new CaptchaRequirement(false, false);
   }
