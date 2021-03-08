@@ -279,6 +279,7 @@ public class AccountController {
                                                                                       .map(uuid -> backupServiceCredentialGenerator.generateFor(uuid.toString()));
 
       if (existingRegistrationLock.isPresent() && existingRegistrationLock.get().requiresClientRegistrationLock()) {
+        logger.info("Account already exists: " + number);
         rateLimiters.getVerifyLimiter().clear(number);
 
         if (!Util.isEmpty(accountAttributes.getRegistrationLock()) || !Util.isEmpty(accountAttributes.getPin())) {
