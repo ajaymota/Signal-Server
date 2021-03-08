@@ -265,6 +265,8 @@ public class AccountController {
         throw new WebApplicationException(400);
       }
 
+      logger.info("ACCOUNT already exists: " + number);
+
       rateLimiters.getVerifyLimiter().validate(number);
 
       Optional<StoredVerificationCode> storedVerificationCode = pendingAccounts.getCodeForNumber(number);
@@ -279,7 +281,7 @@ public class AccountController {
                                                                                       .map(uuid -> backupServiceCredentialGenerator.generateFor(uuid.toString()));
 
       if (existingRegistrationLock.isPresent() && existingRegistrationLock.get().requiresClientRegistrationLock()) {
-        logger.info("Account already exists: " + number);
+        logger.info("ACCOUNT already exists: " + number);
         rateLimiters.getVerifyLimiter().clear(number);
 
         if (!Util.isEmpty(accountAttributes.getRegistrationLock()) || !Util.isEmpty(accountAttributes.getPin())) {
