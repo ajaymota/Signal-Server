@@ -281,7 +281,6 @@ public class AccountController {
                                                                                       .map(uuid -> backupServiceCredentialGenerator.generateFor(uuid.toString()));
 
       if (existingRegistrationLock.isPresent() && existingRegistrationLock.get().requiresClientRegistrationLock()) {
-        logger.info("2. ACCOUNT already PINNed: " + number);
         rateLimiters.getVerifyLimiter().clear(number);
 
         if (!Util.isEmpty(accountAttributes.getRegistrationLock()) || !Util.isEmpty(accountAttributes.getPin())) {
@@ -301,6 +300,10 @@ public class AccountController {
       Account account = createAccount(number, password, userAgent, accountAttributes);
 
 //      metricRegistry.meter(name(AccountController.class, "verify", Util.getCountryCode(number))).mark();
+
+      if ( existingAccount.map(Account::isStorageSupported).orElse(false) ) {
+        logger.info("2. ACCOUNT already PINNed: " + number);
+      }
 
       return new AccountCreationResult(account.getUuid(), existingAccount.map(Account::isStorageSupported).orElse(false));
     } catch (InvalidAuthorizationHeaderException e) {
